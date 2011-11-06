@@ -39,6 +39,7 @@ module DataStore
 end
 
 module ApiAccess
+  class NotFound < StandardError; end
 
   def key(api)
     filename = File.dirname(__FILE__) + '/../config/api_keys.yml'
@@ -51,7 +52,9 @@ module ApiAccess
   end
 
   def json_from(url)
-    JSON.parse(read_from(url))
+    data = read_from(url)
+    raise NotFound unless data
+    JSON.parse(data)
   end
 
   def read_from(url)
@@ -68,6 +71,8 @@ module ApiAccess
         @retry = 0 unless @retry
         @retry += 1
         retry if @retry < 5
+      elsif e.message =~ /^404/
+        return nil
       end
       raise e
     end

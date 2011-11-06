@@ -16,7 +16,7 @@ class User
     total_entries.to_i
   end
 
-  def top_artists(year=nil, count_festivals=false)
+  def top_artists(year=nil, count_festivals=true)
     events = gigography(year)
     artists = {}
     events.each do |event|
