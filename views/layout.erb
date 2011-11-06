@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>live.ly</title>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <link href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.css" rel="stylesheet">
+  <link rel="stylesheet" href="/stylesheets/lively.css" type="text/css" />
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  <style type="text/css">
+    body {
+      padding-top: 60px;
+    }
+  </style>
+
+  <script type="text/javascript"
+      src="http://maps.googleapis.com/maps/api/js?sensor=false">
+  </script>
+  <script type="text/javascript">
+    function initialize() {
+        <% if @latlngs.any? %>
+        var latlng = new google.maps.LatLng(<%= @latlngs.first.first %>, <%= @latlngs.first.last %>);
+        <% else %>
+        var latlng = new google.maps.LatLng(-63.869714622204825, -58.3154296875);
+        <% end %>
+
+        var myOptions = {
+          zoom: 8,
+          center: latlng,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map"), myOptions);
+
+        var bounds = new google.maps.LatLngBounds();
+        <% @latlngs.each do |latlng| %>
+          pinLatLng = new google.maps.LatLng(<%= latlng.first.to_f %>, <%= latlng.last.to_f %>);
+          bounds.extend (pinLatLng);
+          pinMarkers = new google.maps.Marker({position: pinLatLng, map: map});
+        <% end %>
+        map.fitBounds(bounds);
+    }
+  </script>
+</head>
+<body onload="initialize()">
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <span class="brand">live.ly</span>
+        </div>
+      </div>
+
+    </div>
+
+  <div class="container">
+
+    <div class="hero-unit">
+      <%= yield %>
+    </div>
+
+    <!--&lt;!&ndash; Example row of columns &ndash;&gt;-->
+    <!--<div class="row">-->
+      <!--<div class="span6">-->
+        <!--<h2>Heading</h2>-->
+        <!--<p>Etiam porta sem malesuada magna mollis euismod. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</p>-->
+        <!--<p><a class="btn" href="#">View details &raquo;</a></p>-->
+
+      <!--</div>-->
+      <!--<div class="span5">-->
+        <!--<h2>Heading</h2>-->
+         <!--<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>-->
+        <!--<p><a class="btn" href="#">View details &raquo;</a></p>-->
+     <!--</div>-->
+      <!--<div class="span5">-->
+        <!--<h2>Heading</h2>-->
+        <!--<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>-->
+        <!--<p><a class="btn" href="#">View details &raquo;</a></p>-->
+      <!--</div>-->
+    <!--</div>-->
+
+    <footer>
+      <div><a href="http://saleandro.com">saleandro</a></div><div>and</div>
+      <a href="http://www.echonest.com"><img src="/images/echonest.gif" width="100"></a>
+      <a href="http://www.songkick.com"><img src="/images/songkick.png" width="100"></a>
+      <a href="http://last.fm"><img src="/images/lastfm.jpg" width="100"></a>
+    </footer>
+
+  </div> <!-- /container -->
+</body>
+</html>

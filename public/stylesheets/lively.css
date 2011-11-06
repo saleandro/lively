@@ -1,0 +1,109 @@
+body {
+  padding-top: 0px;
+}
+
+a {
+ color: #f86484;
+}
+
+#map {
+  height: 400px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.top-terms {
+  padding: 20px;
+  list-style: none;
+  text-align: center;
+}
+
+.top-terms li {
+  display: inline;
+  margin-right: 10px;
+}
+
+.stats {
+  font-size: 2em;
+  height: 100px;
+  margin-top: 10px;
+  text-align: right;
+}
+
+.stats span {
+  display:block;
+  line-height: 25px;
+  margin-top: 5px;
+}
+
+li.artist-image {
+  float:left;
+}
+span.artist-image {
+  background-color: black;
+  border: 2px solid white;
+  display: block;
+  height: 100px;
+  overflow: hidden;
+  width: 100px;
+}
+
+.artist-count {
+   -moz-transition: all 0.5s linear 0s;
+  background: none repeat scroll 0 0 #EEEEEE;
+  bottom: 16px;
+  color: #666666;
+  font-size: 1em;
+  font-weight: bold;
+  padding: 2px 6px 2px 4px;
+}
+
+.artist-name {
+  font-size: 1.6em;
+  margin: 10px;
+}
+
+.distance {
+  font-size: 1.6em;
+  margin: 10px;
+}
+
+.artist-name, .top-venue, .distance {
+  color: #666666;
+}
+
+h3 {
+  margin-top: 10px;
+}
+
+.topbar {
+  position: absolute;
+}
+
+.term1 {
+  font-size: 1.4em;
+}
+
+.term2 {
+  font-size: 1.2em;
+}
+
+.term3 {
+  font-size: 1em;
+}
+
+footer {
+  text-align: right;
+}
+
+footer img {
+  margin-left: 10px;
+  margin-bottom: 10px;
+  vertincal-align: bottom;
+}
+
+footer a {
+  font-size: 1.6em;
+  font-weight: bold;
+}
+
