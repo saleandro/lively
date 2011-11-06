@@ -3,14 +3,37 @@ require 'open-uri'
 require 'json'
 
 module DataStore
+
+  def self.set(key, value)
+    if @redisdb
+      @redisdb[key] = value
+    else
+      if key = self.get(key)
+        @sqldb[:cache].filter(:key => key).update(:value => value)
+      else
+        @sqldb[:cache].insert(:key => key, :value => value)
+      end
+    end
+  end
+
+  def self.get(key)
+    if @redisdb
+      @redisdb.get(key)
+    else
+      @sqldb[:cache].filter(:key => key).select(:value).single_value
+    end
+  end
+
+  private
+
   def self.store
-    if ENV["REDISTOGO_URL"]
-      uri = URI.parse(ENV["REDISTOGO_URL"])
+    if ENV["DATABASE_URL"]
+      @sqldb = Sequel.connect ENV["DATABASE_URL"]
     else
       uri = URI.parse('redis://localhost:6789')
+      @redisdb ||= Redis.new(:host => uri.host, :port => uri.port, :password => uri.password, :user => uri.user, :thread_safe => true)
     end
 
-    @db ||= Redis.new(:host => uri.host, :port => uri.port, :password => uri.password, :thread_safe => true)
   end
 end
 

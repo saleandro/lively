@@ -7,11 +7,11 @@ class User
   end
 
   def total_events
-    unless total_entries = DataStore.store.get('user_gigography_total')
+    unless total_entries = DataStore.get('user_gigography_total')
       url           = "http://api.songkick.com/api/3.0/users/#{@username}/gigography.json?apikey=#{key('songkick')}&page=1&per_page=1"
       events_json   = json_from(url)
       total_entries = events_json['resultsPage']['totalEntries'].to_i
-      DataStore.store['user_gigography_total'] = total_entries
+      DataStore.set('user_gigography_total', total_entries)
     end
     total_entries.to_i
   end
@@ -84,9 +84,9 @@ class User
 
       destination = latlngs[index+1].join(",")
       url = "http://maps.googleapis.com/maps/api/distancematrix/json?origins=#{origin}&destinations=#{destination}&sensor=false"
-      unless cached_distance = DataStore.store.get(url)
+      unless cached_distance = DataStore.get(url)
         cached_distance = read_from(url)
-        DataStore.store[url] = cached_distance
+        DataStore.set(url, cached_distance)
       end
       cached_distance = JSON.parse(cached_distance)
       result = cached_distance['rows'].first['elements']
@@ -108,7 +108,7 @@ class User
 
   def gigography(year=nil)
     key = 'user_gigography_' + @username
-    unless events_json = DataStore.store.get(key)
+    unless events_json = DataStore.get(key)
       page = 1
       per_page = 100
       events = []
@@ -122,7 +122,7 @@ class User
         page         += 1
       end
 
-      DataStore.store[key] = events.to_json
+      DataStore.set(key, events.to_json)
     else
       events = JSON.parse(events_json)
     end

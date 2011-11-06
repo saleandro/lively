@@ -30,7 +30,7 @@ class Artist
     return @terms if @terms
 
     key = 'artist_terms'+catalog_id
-    unless terms_json = DataStore.store.get(key)
+    unless terms_json = DataStore.get(key)
       if mbids.empty?
         artist_id = echonest_id_by_name(name)
         return 0 unless artist_id
@@ -43,7 +43,7 @@ class Artist
       url = 'http://developer.echonest.com/api/v4/artist/terms?api_key='+key('echonest')+'&'+id_param+'&format=json'
       json = json_from(url)
       @terms = json['response']['terms'] ? json['response']['terms'].select {|a| a['weight'].to_f > 0.8 }.map {|a| a['name']} : []
-      DataStore.store[key] = @terms.to_json
+      DataStore.set(key, @terms.to_json)
     else
       @terms = JSON.parse(terms_json)
     end
@@ -80,7 +80,7 @@ class Artist
     return @image if @image
 
     key = 'artist_profile_image'+catalog_id
-    @image = DataStore.store.get(key)
+    @image = DataStore.get(key)
 
     unless @image
       if mbids.empty?
@@ -96,7 +96,7 @@ class Artist
       end
 
       @image = json['artist'] ? json['artist']['image'].select {|i| i['size'] == 'large'}.first['#text'] : ''
-      DataStore.store[key] = @image
+      DataStore.set(key, @image)
     end
 
     @image
