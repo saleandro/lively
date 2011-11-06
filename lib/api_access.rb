@@ -11,8 +11,13 @@ end
 module ApiAccess
 
   def key(api)
-    @config ||= YAML.load_file(File.dirname(__FILE__) + '/../config/api_keys.yml')
-    @config[api]
+    filename = File.dirname(__FILE__) + '/../config/api_keys.yml'
+    if File.exists?(filename)
+      @config ||= YAML.load_file(filename)
+      @config[api]
+    else
+      ENV['KEY_' + api.upcase]
+    end
   end
 
   def json_from(url)
