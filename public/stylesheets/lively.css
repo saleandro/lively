@@ -107,3 +107,10 @@ footer a {
   font-weight: bold;
 }
 
+.hero-unit h1 {
+  font-size: 45px;
+}
+
+.hero-unit {
+  padding-top: 40px;
+}

@@ -35,7 +35,7 @@ get '/users/:username/:year' do
     @duration_in_days =  @distance_in_km/5/24.0
 
     erb :user
-  rescue ApiKey::NotFound
+  rescue NotFound
     return 404
   end
 end

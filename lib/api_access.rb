@@ -33,13 +33,13 @@ module DataStore
         uri = URI.parse('redis://localhost:6379')
         @redisdb ||= Redis.new(:host => uri.host, :port => uri.port, :password => uri.password, :user => uri.user, :thread_safe => true)
       end
-
     end
   end
 end
 
+class NotFound < StandardError; end
+
 module ApiAccess
-  class NotFound < StandardError; end
 
   def key(api)
     filename = File.dirname(__FILE__) + '/../config/api_keys.yml'

@@ -7,11 +7,12 @@ class User
   end
 
   def total_events
-    unless total_entries = DataStore.get('user_gigography_total')
+    key = "user_gigography_total_#{@username}"
+    unless total_entries = DataStore.get(key)
       url           = "http://api.songkick.com/api/3.0/users/#{@username}/gigography.json?apikey=#{key('songkick')}&page=1&per_page=1"
       events_json   = json_from(url)
       total_entries = events_json['resultsPage']['totalEntries'].to_i
-      DataStore.set('user_gigography_total', total_entries)
+      DataStore.set(key, total_entries)
     end
     total_entries.to_i
   end
