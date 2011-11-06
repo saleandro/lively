@@ -2,6 +2,7 @@ require 'rubygems'
 require 'pp'
 require 'sinatra'
 require 'redis'
+require 'sequel'
 require 'yaml'
 
 lib_folder = File.dirname(__FILE__) + '/lib'
