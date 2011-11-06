@@ -40,6 +40,10 @@ get '/users/:username/:year' do
   end
 end
 
+not_found do
+  "Ops, nothing here..."
+end
+
 helpers do
   def pluralize(count, text='time')
     "#{count} #{count == 1 ? text : text + 's'}"
