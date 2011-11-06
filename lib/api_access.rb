@@ -8,7 +8,7 @@ module DataStore
       if store.is_a?(Redis)
         store[key] = value
       else
-        if key = get(key)
+        if get(key)
           store[:cache].filter(:key => key).update(:value => value)
         else
           store[:cache].insert(:key => key, :value => value)
