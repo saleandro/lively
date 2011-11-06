@@ -14,6 +14,12 @@
   </div>
 </div>
 
+<% if @events.size.zero? %>
+  <div>
+    <img align="middle" src="/images/sadkitten.png" text="I’m sad" alt="sad kitten :(">
+  </div>
+<% end %>
+
 <ol class="media-grid">
   <% @top_artists.first(24).each do |artist| %>
     <li class="artist-image">
@@ -39,30 +45,38 @@
 </div>
 
 <div class="row">
-  <div class="span5">
-  <h5><div class="top-venue">Top venues</div></h5>
-  <ol>
-    <% @top_venues.first(10).each do |venue, count| %>
-      <li><%= venue %>: <%= pluralize(count.first) %></li>
-    <% end %>
-  </ol>
-  </div>
-  <div class="span4">
-  <h5><div class="top-venue">Top cities</div></h5>
+  <% if @top_venues.any? %>
+    <div class="span5">
+    <h5><div class="top-venue">Top venues</div></h5>
     <ol>
-      <% @top_cities.first(10).each do |city, count| %>
-        <li><%= city %>: <%= pluralize(count.first) %></li>
+      <% @top_venues.first(10).each do |venue, count| %>
+        <li><%= venue %>: <%= pluralize(count.first) %></li>
       <% end %>
     </ol>
-  </div>
-  <div class="span5">
-  <h5><div class="top-venue">Top festivals</div></h5>
-    <ol>
-      <% @top_festivals.first(10).each do |festival, count| %>
-        <li><%= festival %>: <%= pluralize(count) %></li>
-      <% end %>
-    </ol>
-  </div>
+    </div>
+  <% end %>
+
+  <% if @top_cities.any? %>
+    <div class="span4">
+    <h5><div class="top-venue">Top cities</div></h5>
+      <ol>
+        <% @top_cities.first(10).each do |city, count| %>
+          <li><%= city %>: <%= pluralize(count.first) %></li>
+        <% end %>
+      </ol>
+    </div>
+  <% end %>
+
+  <% if @top_festivals.any? %>
+    <div class="span5">
+    <h5><div class="top-venue">Top festivals</div></h5>
+      <ol>
+        <% @top_festivals.first(10).each do |festival, count| %>
+          <li><%= festival %>: <%= pluralize(count) %></li>
+        <% end %>
+      </ol>
+    </div>
+   <% end %>
 </div>
 
 <script>

@@ -108,24 +108,23 @@ class User
   end
 
   def gigography(year=nil)
-    key = 'user_gigography_' + @username
-    unless events_json = DataStore.get(key)
-      page = 1
-      per_page = 100
-      events = []
-      total_entries = 1
+    page = 0
+    per_page = 100
+    events = []
+    total_entries = 1
 
-      while events.size < total_entries
+    while events.size < total_entries
+      page += 1
+      key = 'user_gigography_' + @username + '_' + page.to_s
+      unless events_json = DataStore.get(key)
         url           = "http://api.songkick.com/api/3.0/users/#{@username}/gigography.json?apikey=#{key('songkick')}&page=#{page}&per_page=#{per_page}"
-        events_json   = json_from(url)
-        total_entries = events_json['resultsPage']['totalEntries'].to_i
-        events       += events_json['resultsPage']['results']['event']
-        page         += 1
+        events_json   = read_from(url)
+        DataStore.set(key, events_json)
       end
 
-      DataStore.set(key, events.to_json)
-    else
-      events = JSON.parse(events_json)
+      events_json  = JSON.parse(events_json)
+      total_entries = events_json['resultsPage']['totalEntries'].to_i
+      events       += events_json['resultsPage']['results']['event']
     end
 
     events = events.select {|e| Time.parse(e['start']['date']).year == year.to_i} if year
