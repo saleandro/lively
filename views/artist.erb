@@ -14,7 +14,7 @@
 
 <% if @events.size.zero? %>
   <div>
-    <img align="middle" src="/images/sadkitten.png" text="I’m sad" alt="sad kitten :(">
+    <img align="middle" src="/images/sadkitten.png" title="I’m sad" alt="sad kitten :(">
   </div>
 <% end %>
 
@@ -67,7 +67,7 @@
   <% @top_artists.first(24).each do |artist| %>
     <li class="artist-image">
       <span class="artist-image">
-        <img class="thumbnail" onhover="" src="<%= artist.image %>" alt="<%= artist.name + ": #{pluralize(artist.num_times)}" %>" text="<%= artist.name + ": #{pluralize(artist.num_times)}" %>">
+        <img class="thumbnail" onhover="" src="<%= artist.image %>" alt="<%= artist.name + ": #{pluralize(artist.num_times)}" %>" title="<%= artist.name + ": #{pluralize(artist.num_times)}" %>">
       </span>
     </li>
   <% end %>
@@ -81,7 +81,7 @@
 <script type="text/javascript">
 $(".artist-image img").hover(
   function () {
-    $('div.artist-name').html($(this).attr('text'));
+    $('div.artist-name').html($(this).attr('title'));
   }
 );
 </script>

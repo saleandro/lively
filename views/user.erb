@@ -16,7 +16,7 @@
 
 <% if @events.size.zero? %>
   <div>
-    <img align="middle" src="/images/sadkitten.png" text="I’m sad" alt="sad kitten :(">
+    <img align="middle" src="/images/sadkitten.png" title="I’m sad" alt="sad kitten :(">
   </div>
 <% end %>
 
@@ -82,7 +82,7 @@
 <script type="text/javascript">
 $(".artist-image img").hover(
   function () {
-    $('div.artist-name').html($(this).attr('text'));
+    $('div.artist-name').html($(this).attr('title'));
   }
 );
 </script>
