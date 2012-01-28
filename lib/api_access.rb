@@ -61,7 +61,9 @@ module ApiAccess
     begin
 #      sleep 1
 #      puts url
+      start = Time.now
       results = open(url).read
+      puts "#{url}: took #{Time.now - start}"
       @retry = 0
       results
     rescue OpenURI::HTTPError => e
