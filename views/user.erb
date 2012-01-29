@@ -1,10 +1,22 @@
-<h1><%= params['username'] %>’s lively <%= params['year'] ? params['year'] : 'history' %></h1>
+<div class="row">
+  <div class="span8">
+    <script type="text/javascript" src="http://www.delta-9.net/musichackday/person.js"></script>
+    <div id="person" style="float:left;">
+      <img src="/images/person.png" />
+    </div>
+    <div id="key">
+    </div>
+  </div>
+  <div class="span6">
+    <h1><%= params['username'] %>’s lively <%= params['year'] ? params['year'] : 'history' %></h1>
+  </div>
+</div>
 
 <div class="row">
   <div class="span8 histogram">
     <ol class="top-terms">
-    <% @top_terms.first(10).each_with_index do |term, index| %>
-      <li class="term<%= index < 3 ? 1 : (index < 7 ? 2 : 3) %>"><%= term.first %></li>
+    <% @top_terms_percentages.each_with_index do |term, index| %>
+      <li class="term<%= term.last.to_s.gsub('.', '_')%>"><%= term.first %></li>
     <% end %>
     </ol>
   </div>

@@ -49,7 +49,13 @@ get '/users/:username' do
     @top_artists  = top_artists.map {|a| Artist.new(a['object'], a['times'])}
 
     terms = @top_artists.first(24).map {|a| a.terms}.flatten.compact
-    @top_terms = terms.inject(Hash.new(0)) { |total, e| total[e] += 1 ; total}.sort_by {|a| a[1]}.reverse
+    top_terms = terms.inject(Hash.new(0)) { |total, e| total[e] += 1 ; total}.sort_by {|a| a[1]}.reverse
+    total_terms = top_terms.inject(0) {|s, t| s += t.last}
+    top_terms_percentages = top_terms.map {|term| [term.first, (term.last/total_terms.to_f)*100] }
+    top_terms_percentages = top_terms_percentages.first(10)
+
+    total_terms = top_terms_percentages.inject(0) {|s, t| s += t.last}
+    @top_terms_percentages = top_terms_percentages.map {|term| [term.first, (term.last/total_terms.to_f)*100] }
 
     @top_venues      = user.top_venues(year)
     @top_festivals   = user.top_festivals(year)
