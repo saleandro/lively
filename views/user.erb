@@ -1,14 +1,19 @@
-<div class="row">
-  <div class="span8">
+<div class="row" style="margin-bottom:20px">
+  <div class="span4">
     <script type="text/javascript" src="http://www.delta-9.net/musichackday/person.js"></script>
     <div id="person" style="float:left;">
-      <img src="/images/person.png" />
+      <img src="/images/<%= params['p'] == 'f' ? 'girl' : 'boy' %>.png" />
     </div>
     <div id="key">
     </div>
   </div>
-  <div class="span6">
-    <h1><%= params['username'] %>’s lively <%= params['year'] ? params['year'] : 'history' %></h1>
+  <div class="span10">
+    <h1 style="text-align:right"><%= params['username'] %>’s lively <%= params['year'] ? params['year'] : 'history' %></h1>
+    <div class="stats">
+      <span><%= pluralize(@events.size, 'concert') %><% if params['year'] %> this year<% end %></span>
+      <% if params['year'] %><span class="percentage"><%= "%.2f" % ((@events.size.to_f/@total_events)*100.0) %>% of <%= @total_events %></span><% end %>
+      <%= erb :_venue_stats, :locals => {:smallest_venues => @smallest_venues, :biggest_venues => @biggest_venues} %>
+    </div>
   </div>
 </div>
 
@@ -19,12 +24,6 @@
       <li class="term<%= term.last.to_s.gsub('.', '_')%>"><%= term.first %></li>
     <% end %>
     </ol>
-  </div>
-
-  <div class="span6 stats">
-    <span><%= pluralize(@events.size, 'concert') %><% if params['year'] %> this year<% end %></span>
-    <% if params['year'] %><span class="percentage"><%= "%.2f" % ((@events.size.to_f/@total_events)*100.0) %>% of <%= @total_events %></span><% end %>
-    <%= erb :_venue_stats, :locals => {:smallest_venues => @smallest_venues, :biggest_venues => @biggest_venues} %>
   </div>
 </div>
 

@@ -27,17 +27,9 @@ class Artist
 
   def terms
     return @terms if @terms
+    return [] unless echonest_artist_id_param
 
-    if mbid
-      id_param = 'id=musicbrainz:artist:'+mbid
-    else
-      artist_id = echonest_id_by_name(name)
-      return 0 unless artist_id
-
-      id_param = 'id='+artist_id
-    end
-
-    url = 'http://developer.echonest.com/api/v4/artist/terms?api_key='+key('echonest')+'&'+id_param+'&format=json'
+    url = 'http://developer.echonest.com/api/v4/artist/terms?api_key='+key('echonest')+'&'+echonest_artist_id_param+'&format=json'
     json = cached_data_from(url)
     @terms = json['response']['terms'] ? json['response']['terms'].select {|a| a['weight'].to_f > 0.8 }.map {|a| a['name']} : []
   end
@@ -48,31 +40,32 @@ class Artist
 
   def hotttness
     return @hotttness if @hotttness
+    return 0 unless echonest_artist_id_param
 
-    if mbid
-      id_param = 'id=musicbrainz:artist:'+mbid
-    else
-      artist_id = echonest_id_by_name(name)
-      return 0 unless artist_id
-
-      id_param = 'id='+artist_id
-    end
-
-    url = 'http://developer.echonest.com/api/v4/artist/hotttnesss?api_key='+key('echonest')+'&'+id_param+'&format=json'
+    url = 'http://developer.echonest.com/api/v4/artist/hotttnesss?api_key='+key('echonest')+'&'+echonest_artist_id_param+'&format=json'
     json = cached_data_from(url)
     @hotttness = json['response']['artist'] ? json['response']['artist']['hotttnesss'] : 0
   end
 
-  def image=(img)
-    @image = img
+  def echonest_image
+    return @image if @image
+    return nil unless echonest_artist_id_param
+
+    json     = cached_data_from("http://developer.echonest.com/api/v4/artist/images?api_key=#{key('echonest')}&#{echonest_artist_id_param}&format=json&results=1&start=0")
+    @image = json && json['response'] ? json['response']['images'].first['url'] : ''
   end
 
   def image
-    return @image if @image
-
-    id_param = mbid ? 'mbid='+mbid : 'artist='+URI.encode(name)
-    json     = cached_data_from('http://ws.audioscrobbler.com/2.0/?method=artist.getInfo&api_key='+key('lastfm')+'&'+id_param+'&format=json')
-    @image = json && json['artist'] ? json['artist']['image'].select {|i| i['size'] == 'large'}.first['#text'] : ''
+    image_url = DataStore.get("artist_image_#{artist_id}")
+    unless image_url
+      id_param = mbid ? 'mbid='+mbid : 'artist='+URI.encode(name)
+      json     = cached_data_from('http://ws.audioscrobbler.com/2.0/?method=artist.getInfo&api_key='+key('lastfm')+'&'+id_param+'&format=json')
+      image_url = json && json['artist'] ? json['artist']['image'].select {|i| i['size'] == 'large'}.first['#text'] : nil
+      if image_url
+        DataStore.set("artist_image_#{artist_id}", image_url)
+      end
+    end
+    image_url
   end
 
   def mbid
@@ -107,6 +100,17 @@ class Artist
     url = 'http://developer.echonest.com/api/v4/artist/search?api_key='+key('echonest')+'&format=json&name='+URI.encode(name)
     json = cached_data_from(url)
     json['response']['artists'].first['id'] if json['response']['artists'].any?
+  end
+
+  def echonest_artist_id_param
+    if mbid
+      id_param = 'id=musicbrainz:artist:'+mbid
+    else
+      artist_id = echonest_id_by_name(name)
+      return nil unless artist_id
+
+      id_param = 'id='+artist_id
+    end
   end
 
 end
