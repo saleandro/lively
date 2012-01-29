@@ -47,7 +47,7 @@ a {
   color: #808080;
 }
 
-a.artist-image {
+a.artist-image, span.artist-image {
   float:left;
   background-color: black;
   border: 2px solid white;
@@ -60,7 +60,10 @@ a.artist-image {
   box-shadow: none;
   margin: 0 0 0px 0px;
   padding: 0px;
-  cursor: pointer;
+}
+
+a.artist-image {
+ cursor: pointer;
 }
 
 a.artist-image:hover {
