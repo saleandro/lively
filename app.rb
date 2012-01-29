@@ -48,7 +48,7 @@ get '/users/:username' do
     top_artists   = user.top_artists(year)
     @top_artists  = top_artists.map {|a| Artist.new(a['object'], a['times'])}
 
-    terms = @top_artists.first(24).map {|a| a.terms}.flatten.compact
+    terms = @top_artists.first(5).map {|a| a.terms}.flatten.compact
     top_terms = terms.inject(Hash.new(0)) { |total, e| total[e] += 1 ; total}.sort_by {|a| a[1]}.reverse
     total_terms = top_terms.inject(0) {|s, t| s += t.last}
     top_terms_percentages = top_terms.map {|term| [term.first, (term.last/total_terms.to_f)*100] }
@@ -80,7 +80,7 @@ get '/artists/:artist_mbid' do
     top_artists  = artist.top_artists(year)
     @top_artists = top_artists.map {|a| Artist.new(a['object'], a['times'])}
 
-    terms = ([artist]+@top_artists.first(10)).map {|a| a.terms}.flatten.compact
+    terms = ([artist]+@top_artists.first(5)).map {|a| a.terms}.flatten.compact
     @top_terms = terms.inject(Hash.new(0)) { |total, e| total[e] += 1 ; total}.sort_by {|a| a[1]}.reverse
 
 
