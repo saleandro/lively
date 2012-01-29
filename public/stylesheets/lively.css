@@ -47,10 +47,8 @@ a {
   color: #808080;
 }
 
-li.artist-image {
-  float:left;
-}
 a.artist-image {
+  float:left;
   background-color: black;
   border: 2px solid white;
   display: block;

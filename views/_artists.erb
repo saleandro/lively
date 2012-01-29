@@ -2,9 +2,9 @@
   <div class="span14">
 <ol class="media-grid">
   <% artists.first(24).each do |artist| %>
-    <li class="artist-image">
+    <li>
       <a class="artist-image" <% if artist.mbid %>href="/artists/<%= artist.mbid%>"<% end %>>
-        <img class="thumbnail" onhover="" src="<%= artist.image %>" alt="<%= artist.name + ": #{pluralize(artist.num_times)}" %>" title="<%= artist.name + ": #{pluralize(artist.num_times)}" %>">
+        <img class="thumbnail" onhover="" <% if artist.mbid %>id="<%= artist.mbid %>"<% end %> src="" alt="<%= artist.name + ": #{pluralize(artist.num_times)}" %>" title="<%= artist.name + ": #{pluralize(artist.num_times)}" %>">
       </a>
     </li>
   <% end %>
@@ -16,9 +16,6 @@
 </div>
 
 <script type="text/javascript">
-$(".artist-image img").hover(
-  function () {
-    $('div.artist-name').html($(this).attr('title'));
-  }
-);
+
 </script>
+<script type="text/javascript" src="/javascripts/img_loader.js"></script>

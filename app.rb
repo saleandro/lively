@@ -121,6 +121,14 @@ get '/api/:type/:id/venues.json' do
   venues.to_json
 end
 
+get '/api/artists/:id/image.json' do
+  content_type :json
+
+  songkick_artist = {'identifier' => ['mbid' => params[:id]]}
+  artist = Artist.new(songkick_artist)
+  {:url => artist.image}.to_json
+end
+
 get '/api/:type/:id/metro_areas.json' do
   content_type :json
 
@@ -145,11 +153,9 @@ get '/api/:type/:id/artists.json' do
   case params[:type]
     when 'users'
       resource = User.new(params[:id])
-      exclude_artist_mbid = nil
     when 'artists'
       songkick_artist = {'identifier' => ['mbid' => params[:id]]}
       resource = Artist.new(songkick_artist)
-      exclude_artist_mbid = params[:id]
     else
       return 404
   end
