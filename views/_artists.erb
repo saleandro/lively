@@ -3,9 +3,9 @@
 <ol class="media-grid">
   <% artists.first(24).each do |artist| %>
     <li class="artist-image">
-      <span class="artist-image">
+      <a class="artist-image" <% if artist.mbid %>href="/artists/<%= artist.mbid%>"<% end %>>
         <img class="thumbnail" onhover="" src="<%= artist.image %>" alt="<%= artist.name + ": #{pluralize(artist.num_times)}" %>" title="<%= artist.name + ": #{pluralize(artist.num_times)}" %>">
-      </span>
+      </a>
     </li>
   <% end %>
 </ol>
