@@ -21,7 +21,7 @@ get '/users' do
     url += '?' + params[:year] if params[:year].to_i > 0
     return redirect url
   else
-    return 404
+    erb :users
   end
 end
 
@@ -31,7 +31,7 @@ get '/artists' do
     url += '?' + params[:year] if params[:year].to_i > 0
     return redirect url
   else
-    return 404
+    erb :artists
   end
 end
 
