@@ -1,23 +1,21 @@
+require 'enumerator'
+
 module Evented
 
   def total_events
-    unless total_entries = DataStore.get(total_events_key)
-      url           = "#{api_endpoint}/gigography.json?apikey=#{key('songkick')}&page=1&per_page=1"
-      events_json   = json_from(url)
-      total_entries = events_json['resultsPage']['totalEntries'].to_i
-      DataStore.set(total_events_key, total_entries)
-    end
-    total_entries.to_i
+    url = "#{api_endpoint}/gigography.json?apikey=#{key('songkick')}&page=1&per_page=1"
+    events = cached_data_from(url)
+    events['resultsPage']['totalEntries'].to_i
   end
 
-  def top_artists(year=nil, count_festivals=true, exclude_mbid=nil)
+  def top_artists(year=nil, count_festivals=true)
     events = gigography(year)
     artists = {}
     events.each do |event|
       next if !count_festivals && event['type'].downcase == 'festival'
       event['performance'].each do |performance|
         artist = performance['artist']
-        next if exclude_mbid && artist['identifier'].any? {|i| i['mbid'] == exclude_mbid}
+        next if respond_to?(:mbid) && mbid && artist['identifier'].any? {|i| i['mbid'] == mbid}
 
         artists[artist['id']] ||= [0, artist]
         artists[artist['id']][0] += 1
@@ -63,31 +61,6 @@ module Evented
     sort_and_format_response(festivals, 'series', year)
   end
 
-  def distance_in_meters(year=nil)
-    latlngs = latlngs(year)
-    return nil if latlngs.empty?
-
-    distance = 0
-    latlngs.each_with_index do |latlng, index|
-      origin = latlng.join(",")
-      break if latlngs[index+1].nil?
-
-      destination = latlngs[index+1].join(",")
-      url = "http://maps.googleapis.com/maps/api/distancematrix/json?origins=#{origin}&destinations=#{destination}&sensor=false"
-      unless cached_distance = DataStore.get(url)
-        cached_distance = read_from(url)
-        DataStore.set(url, cached_distance)
-      end
-      cached_distance = JSON.parse(cached_distance)
-      result = cached_distance['rows'].first['elements']
-      if result && result.first['status'] == 'OK'
-        distance += result.first['distance']['value']
-      end
-    end
-
-    distance
-  end
-
   def latlngs(year=nil)
     events = gigography(year)
     latlngs = events.map do |event|
@@ -96,20 +69,32 @@ module Evented
     end.compact
   end
 
+  def smallest_venues(year=nil)
+    venues_with_capacity = venues(year).select do |v|
+      v if v['capacity'].to_i > 0 && v['capacity'].to_i <= 250
+    end.flatten.compact
+
+    venues_with_capacity.sort_by {|v| v['capacity'].to_i }
+  end
+
+  def biggest_venues(year=nil)
+    venues_with_capacity = venues(year).select do |v|
+      v if v['capacity'].to_i >= 10_000
+    end.flatten.compact
+
+    venues_with_capacity.sort_by {|v| v['capacity'].to_i }.reverse
+  end
+
   def gigography(year=nil)
-    page = 0
-    per_page = 100
-    events = []
+    page          = 0
+    per_page      = 100
+    events        = []
     total_entries = 1
     while events.size < total_entries
-      page += 1
-      unless events_json = DataStore.get(gigography_key(page))
-        url           = "#{api_endpoint}/gigography.json?apikey=#{key('songkick')}&page=#{page}&per_page=#{per_page}"
-        events_json   = read_from(url)
-        DataStore.set(gigography_key(page), events_json)
-      end
+      page         += 1
+      url           = "#{api_endpoint}/gigography.json?apikey=#{key('songkick')}&page=#{page}&per_page=#{per_page}"
+      events_json   = cached_data_from(url)
 
-      events_json  = JSON.parse(events_json)
       total_entries = events_json['resultsPage']['totalEntries'].to_i
       events       += events_json['resultsPage']['results']['event']
     end
@@ -119,6 +104,17 @@ module Evented
   end
 
   private
+
+  def venues(year)
+    events = gigography(year)
+    venues = events.map do |event|
+      venue_id = event['venue']['id']
+      next unless venue_id
+
+      url = "http://api.songkick.com/api/3.0/venues/#{venue_id}.json?apikey=#{key('songkick')}"
+      cached_data_from(url)['resultsPage']['results']['venue']
+    end.flatten.compact.uniq
+  end
 
   def sort_and_format_response(things, type, year=nil)
     things = things.values.sort_by {|v| v[0]}.reverse

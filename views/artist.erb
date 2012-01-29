@@ -1,113 +1,28 @@
 <h1>
-  <img class="thumbnail" onhover="" style="float:left;padding-right: 200px" src="<%= @artist.image %>" alt="<%= @artist.name %>" text="<%= @artist.name %>">
-  <%= @artist.name %>’s lively <%= params['year'] ? params['year'] : 'history' %></h1>
+  <img class="thumbnail" src="<%= @artist.image %>" alt="<%= @artist.name %>" text="<%= @artist.name %>">
+  <span><%= @artist.name %>’s lively <%= params['year'] ? params['year'] : 'history' %></span>
 </h1>
 
 <div class="row">
+  <div class="span8 histogram">
+    <ol class="top-terms">
+    <% @top_terms.first(10).each_with_index do |term, index| %>
+      <li class="term<%= index < 3 ? 1 : (index < 7 ? 2 : 3) %>"><%= term.first %></li>
+    <% end %>
+    </ol>
+  </div>
+
   <div class="span6 stats">
     <span><%= pluralize(@events.size, 'concert') %><% if params['year'] %> this year<% end %></span>
-    <% if params['year'] %><span><%= "%.2f" % ((@events.size.to_f/@total_events)*100.0) %>% of <%= @total_events %></span><% end %>
+    <% if params['year'] %><span class="percentage"><%= "%.2f" % ((@events.size.to_f/@total_events)*100.0) %>% of <%= @total_events %></span><% end %>
+    <%= erb :_venue_stats, :locals => {:smallest_venues => @smallest_venues, :biggest_venues => @biggest_venues} %>
   </div>
-  <div class="span8 histogram">
-  </div>
 </div>
 
-<% if @events.size.zero? %>
-  <div>
-    <img align="middle" src="/images/sadkitten.png" title="I’m sad" alt="sad kitten :(">
-  </div>
-<% end %>
+<%= erb :_no_events if @events.empty? %>
 
-<div class="row">
-<div id="map"></div>
-</div>
+<%= erb :_map, :locals => {:latlngs => @latlngs} %>
 
-<div class="row">
-<h5><div class="distance">
-  <% if @distance_in_km > 0 %><%= "%.2f" % @distance_in_km.to_f %>km travelled — that’s <%= "%.2f" % @duration_in_days.to_f %> days walking<% end %>
-</div></h5>
-</div>
+<%= erb :_top_locations, :locals => {:top_festivals => @top_festivals, :top_venues => @top_venues, :top_metro_areas => @top_metro_areas} %>
 
-<div class="row">
-  <% if @top_venues.any? %>
-    <div class="span5">
-    <h5><div class="top-venue">Top venues</div></h5>
-    <ol>
-      <% @top_venues.first(10).each do |response| %>
-        <li><%= response['object']['displayName'] %>: <%= pluralize(response['times']) %></li>
-      <% end %>
-    </ol>
-    </div>
-  <% end %>
-
-  <% if @top_metro_areas.any? %>
-    <div class="span4">
-    <h5><div class="top-venue">Top locations</div></h5>
-      <ol>
-        <% @top_metro_areas.first(10).each do |response| %>
-          <li><%= response['object']['displayName'] %>: <%= pluralize(response['times']) %></li>
-        <% end %>
-      </ol>
-    </div>
-  <% end %>
-
-  <% if @top_festivals.any? %>
-    <div class="span5">
-    <h5><div class="top-venue">Top festivals</div></h5>
-      <ol>
-        <% @top_festivals.first(10).each do |response| %>
-          <li><%= response['object']['displayName'] %>: <%= pluralize(response['times']) %></li>
-        <% end %>
-      </ol>
-    </div>
-   <% end %>
-</div>
-
-<ol class="media-grid">
-  <% @top_artists.first(24).each do |artist| %>
-    <li class="artist-image">
-      <span class="artist-image">
-        <img class="thumbnail" onhover="" src="<%= artist.image %>" alt="<%= artist.name + ": #{pluralize(artist.num_times)}" %>" title="<%= artist.name + ": #{pluralize(artist.num_times)}" %>">
-      </span>
-    </li>
-  <% end %>
-</ol>
-
-<div class="row">
-  <h5><div class="artist-name">&nbsp;</div></h5>
-</div>
-
-
-<script type="text/javascript">
-$(".artist-image img").hover(
-  function () {
-    $('div.artist-name').html($(this).attr('title'));
-  }
-);
-</script>
-
-<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
-<script type="text/javascript">
-  function initialize() {
-      <% if @latlngs && @latlngs.any? %>
-      var latlng = new google.maps.LatLng(<%= @latlngs.first.first %>, <%= @latlngs.first.last %>);
-      <% else %>
-      var latlng = new google.maps.LatLng(-63.869714622204825, -58.3154296875);
-      <% end %>
-
-      var myOptions = {
-        zoom: 8,
-        center: latlng,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-      var map = new google.maps.Map(document.getElementById("map"), myOptions);
-
-      var bounds = new google.maps.LatLngBounds();
-      <% @latlngs.each do |latlng| %>
-        pinLatLng = new google.maps.LatLng(<%= latlng.first.to_f %>, <%= latlng.last.to_f %>);
-        bounds.extend (pinLatLng);
-        pinMarkers = new google.maps.Marker({position: pinLatLng, map: map});
-      <% end %>
-      map.fitBounds(bounds);
-  }
-</script>
+<%= erb :_artists, :locals => {:artists => @top_artists} %>

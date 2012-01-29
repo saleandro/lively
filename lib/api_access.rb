@@ -1,45 +1,28 @@
 require 'rubygems'
 require 'open-uri'
 require 'json'
-
-module DataStore
-  class << self
-    def set(key, value)
-      if store.is_a?(Redis)
-        store[key] = value
-      else
-        if get(key)
-          store[:cache].filter(:key => key).update(:value => value)
-        else
-          store[:cache].insert(:key => key, :value => value)
-        end
-      end
-    end
-
-    def get(key)
-      if store.is_a?(Redis)
-        store.get(key)
-      else
-        store[:cache].filter(:key => key).select(:value).single_value
-      end
-    end
-
-    private
-
-    def store
-      if ENV["DATABASE_URL"]
-        @sqldb ||= Sequel.connect ENV["DATABASE_URL"]
-      else
-        uri = URI.parse('redis://localhost:6379')
-        @redisdb ||= Redis.new(:host => uri.host, :port => uri.port, :password => uri.password, :user => uri.user, :thread_safe => true)
-      end
-    end
-  end
-end
+require 'em-http-request'
+require 'curb'
+require 'active_support'
 
 class NotFound < StandardError; end
 
 module ApiAccess
+
+  def cached_data_from(url)
+    data = cached_data(url)
+    if expired_cache?(data)
+      begin
+        data = json_from(url)
+        DataStore.set(url, data.to_json)
+      rescue NotFound
+        return nil
+      end
+    else
+      data = JSON.parse(data) if data != ''
+    end
+    data
+  end
 
   def key(api)
     filename = File.dirname(__FILE__) + '/../config/api_keys.yml'
@@ -51,32 +34,84 @@ module ApiAccess
     end
   end
 
+  private
+
+  def expired_cache?(data)
+    data.nil?
+  end
+
+  def cached_data(url)
+    DataStore.get(url)
+  end
+
   def json_from(url)
     data = read_from(url)
-    raise NotFound unless data
+    raise NotFound if (data.nil? || data == '')
     JSON.parse(data)
   end
 
   def read_from(url)
-    begin
-#      sleep 1
-#      puts url
-      start = Time.now
-      results = open(url).read
-      puts "#{url}: took #{Time.now - start}"
-      @retry = 0
-      results
-    rescue OpenURI::HTTPError => e
-      puts url
-      if e.message =~ /^503/
-        sleep 1
-        @retry = 0 unless @retry
-        @retry += 1
-        retry if @retry < 5
-      elsif e.message =~ /^404/
-        return nil
-      end
-      raise e
+    start = Time.now
+    res = read_from_curb(url)
+    puts "#{Time.now - start}s #{url}"
+    res
+  end
+
+  def read_from_curb(url)
+    curb_connection.url = url
+    curb_connection.headers.update({"accept-encoding" => "gzip, compressed"})
+    curb_connection.http_get
+    process_response(url, curb_connection.response_code, ActiveSupport::Gzip.decompress(curb_connection.body_str))
+  end
+
+  def curb_connection
+    Thread.current[:transport_curb_easy] ||= Curl::Easy.new
+  end
+
+  def read_from_em(url)
+    start  = Time.now
+    status = response = nil
+    EventMachine.run do
+      http = EventMachine::HttpRequest.new(url).get :head => {"accept-encoding" => "gzip, compressed"}
+      http.errback { raise 'Something went wrong (EM)'; EventMachine.stop }
+      response = http.callback {
+        response = http.response
+        status   = http.response_header.status
+        EventMachine.stop
+      }
     end
+    process_response(url, status, response)
+  end
+
+  def read_from_open_uri(url)
+    begin
+      response = open(url).read
+    rescue OpenURI::HTTPError => e
+      if e.message =~ /^503/
+        status = 503
+      elsif e.message =~ /^404/
+        status = 404
+      else
+        raise e
+      end
+    end
+
+    process_response(url, status, response)
+  end
+
+  def process_response(url, status, response)
+    status = status.to_i
+    if status == 200
+      @retry = 0
+      return response
+    elsif status == 404
+      return nil
+    elsif status == 503
+      sleep 1
+      @retry = 0 unless @retry
+      @retry += 1
+      read_from(url) if @retry < 5
+    end
+    raise "Error in request: status:#{status.inspect} response:#{response.inspect} url:#{url}"
   end
 end

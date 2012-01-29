@@ -1,0 +1,20 @@
+<ol class="media-grid">
+  <% artists.first(24).each do |artist| %>
+    <li class="artist-image">
+      <span class="artist-image">
+        <img class="thumbnail" onhover="" src="<%= artist.image %>" alt="<%= artist.name + ": #{pluralize(artist.num_times)}" %>" title="<%= artist.name + ": #{pluralize(artist.num_times)}" %>">
+      </span>
+    </li>
+  <% end %>
+</ol>
+<div class="row">
+  <h5><div class="artist-name">&nbsp;</div></h5>
+</div>
+
+<script type="text/javascript">
+$(".artist-image img").hover(
+  function () {
+    $('div.artist-name').html($(this).attr('title'));
+  }
+);
+</script>

@@ -1,0 +1,29 @@
+<div class="row">
+  <div id="map"></div>
+</div>
+
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+  function initialize() {
+    <% if latlngs && latlngs.any? %>
+    var latlng = new google.maps.LatLng(<%= latlngs.first.first %>, <%= latlngs.first.last %>);
+    <% else %>
+    var latlng = new google.maps.LatLng(-63.869714622204825, -58.3154296875);
+    <% end %>
+
+    var myOptions = {
+      zoom: 8,
+      center: latlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    var map = new google.maps.Map(document.getElementById("map"), myOptions);
+
+    var bounds = new google.maps.LatLngBounds();
+    <% latlngs.each do |latlng| %>
+      pinLatLng = new google.maps.LatLng(<%= latlng.first.to_f %>, <%= latlng.last.to_f %>);
+      bounds.extend (pinLatLng);
+      pinMarkers = new google.maps.Marker({position: pinLatLng, map: map});
+    <% end %>
+    map.fitBounds(bounds);
+  }
+</script>

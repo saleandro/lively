@@ -1,0 +1,5 @@
+<% if smallest_venues.any? && smallest_venues.size > biggest_venues.size %>
+  <span class="venue-stats">mostly at pubs and basements</span>
+<% elsif biggest_venues.any? %>
+  <span class="venue-stats">mostly at arenas and stadiums</span>
+<% end %>

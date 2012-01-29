@@ -2,4 +2,6 @@ source :gemcutter
 gem 'sinatra'
 gem 'redis'
 gem 'sequel'
-gem 'mysql'
+gem 'em-http-request'
+gem 'curb'
+gem 'activesupport'

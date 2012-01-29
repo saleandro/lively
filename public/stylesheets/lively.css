@@ -16,6 +16,7 @@ a {
   padding: 20px;
   list-style: none;
   text-align: center;
+  width: 400px;
 }
 
 .top-terms li {
@@ -34,6 +35,16 @@ a {
   display:block;
   line-height: 25px;
   margin-top: 5px;
+}
+
+.percentage {
+  font-size: 0.8em;
+  color: #808080;
+}
+
+.venue-stats  {
+  font-size: 0.6em;
+  color: #808080;
 }
 
 li.artist-image {
@@ -81,15 +92,15 @@ h3 {
 }
 
 .term1 {
-  font-size: 1.4em;
+  font-size: 1.6em;
 }
 
 .term2 {
-  font-size: 1.2em;
+  font-size: 1.4em;
 }
 
 .term3 {
-  font-size: 1em;
+  font-size: 1.2em;
 }
 
 footer {
@@ -109,6 +120,10 @@ footer a {
 
 .hero-unit h1 {
   font-size: 45px;
+}
+
+.hero-unit img {
+  vertical-align: middle;
 }
 
 .hero-unit {
