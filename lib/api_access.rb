@@ -107,10 +107,11 @@ module ApiAccess
     elsif status == 404
       return nil
     elsif status == 503
-      sleep 1
-      @retry = 0 unless @retry
-      @retry += 1
-      read_from(url) if @retry < 5
+      #sleep 1
+      #@retry = 0 unless @retry
+      #@retry += 1
+      #read_from(url) if @retry < 5
+      return nil
     end
     raise "Error in request: status:#{status.inspect} response:#{response.inspect} url:#{url}"
   end
