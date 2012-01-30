@@ -15,6 +15,7 @@
   <div class="span6 stats">
     <span><%= pluralize(@events.size, 'concert') %><% if params['year'] %> this year<% end %></span>
     <% if params['year'] %><span class="percentage"><%= "%.2f" % ((@events.size.to_f/@total_events)*100.0) %>% of <%= @total_events %></span><% end %>
+    <span style="font-size:smaller">On tour since <%=(@events.first['start']['date']).split('-').first %></span>
   </div>
 </div>
 
