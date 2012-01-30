@@ -16,9 +16,11 @@ require lib_folder + '/artist'
 include ApiAccess
 
 get '/users' do
-  if params[:username]
-    url = '/users/' + params[:username]
-    url += '?' + params[:year] if params[:year].to_i > 0
+  if params['username']
+    username = params.delete('username')
+    url = '/users/' + username
+    qs = params.map {|k, v| "#{k}=#{v}"}
+    url += "?#{qs.join('&')}" if qs
     return redirect url
   else
     erb :users
@@ -28,13 +30,13 @@ end
 get '/artists' do
   if params[:artist_mbid]
     url = '/artists/' + params[:artist_mbid]
-    url += '?' + params[:year] if params[:year].to_i > 0
+    url += '?year=' + params[:year] if params[:year].to_i > 0
     return redirect url
   elsif params[:artist_name]
     artist = Artist.find_by_name(params[:artist_name])
     if artist.mbid
       url = '/artists/' + artist.mbid
-      url += '?' + params[:year] if params[:year].to_i > 0
+      url += '?year=' + params[:year] if params[:year].to_i > 0
       return redirect url
     else
       erb :artists
