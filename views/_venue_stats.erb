@@ -1,7 +1,8 @@
 <span class="venue-stats"></span>
 <script type="text/javascript">
 $(document).ready(function() {
-  var parts = $(location).attr('href').split('/');
+  var parts = $(location).attr('href').split('?')[0];
+  parts = parts.split('/');
   var id = parts.pop();
   var type = parts.pop();
   $.get("/api/"+type+"/"+id+"/venues/stats.json", function(json) {
