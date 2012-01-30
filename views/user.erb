@@ -11,7 +11,11 @@
     <h1 style="text-align:right"><%= params['username'] %>’s lively <%= params['year'] ? params['year'] : 'history' %></h1>
     <div class="stats">
       <span><%= pluralize(@events.size, 'concert') %><% if params['year'] %> this year<% end %></span>
-      <% if params['year'] %><span class="percentage"><%= "%.2f" % ((@events.size.to_f/@total_events)*100.0) %>% of <%= @total_events %></span><% end %>
+      <% if params['year'].to_i > 0 %>
+        <span class="percentage"><%= "%.2f" % ((@events.size.to_f/@total_events)*100.0) %>% of <%= @total_events %></span>
+      <% else %>
+        <span class="percentage">On tour since <%=(@events.first['start']['date']).split('-').first %></span>
+      <% end %>
       <%#= erb :_venue_stats %>
     </div>
   </div>

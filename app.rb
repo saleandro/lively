@@ -49,7 +49,7 @@ end
 get '/users/:username' do
   begin
     user = User.new(params['username'])
-    year = params['year']
+    year = params[:year].to_i > 0 ? params[:year] : nil
     @total_events = user.total_events
     @events       = user.gigography(year)
 
@@ -80,7 +80,7 @@ end
 get '/artists/:artist_mbid' do
   begin
     artist = Artist.find_by_mbid(params['artist_mbid'])
-    year = params['year']
+    year = params[:year].to_i > 0 ? params[:year] : nil
     @artist = artist
     @total_events = artist.total_events
     @events       = artist.gigography(year)
