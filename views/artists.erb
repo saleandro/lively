@@ -1,8 +1,21 @@
+<% if params[:artist_name] %>
+<div class="row" style="margin-bottom:40px">
+  <div class="span14">
+    <div class="alert-message error">Sorry, we couldn’t find “<%= params[:artist_name] %>” :(</div>
+  </div>
+</div>
+<% end %>
+
 <div class="row">
   <div class="span4"><h1><a href="/artists">artist</a></h1></div>
   <div class="span10">
+  </div>
+</div>
+
+<div class="row" style="margin-top:40px">
+  <div class="span10">
   <form method="get" action="/artists">
-    <input type="text" placeholder="artist music brainz id" name="artist_mbid">
+    <input type="text" placeholder="artist" name="artist_name" value="<%= params[:artist_name] %>">
     <input type="text" placeholder="year (optional)" name="year"><input type="submit" value="go!">
   </form>
   </div>

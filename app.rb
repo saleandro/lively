@@ -30,6 +30,15 @@ get '/artists' do
     url = '/artists/' + params[:artist_mbid]
     url += '?' + params[:year] if params[:year].to_i > 0
     return redirect url
+  elsif params[:artist_name]
+    artist = Artist.find_by_name(params[:artist_name])
+    if artist.mbid
+      url = '/artists/' + artist.mbid
+      url += '?' + params[:year] if params[:year].to_i > 0
+      return redirect url
+    else
+      erb :artists
+    end
   else
     erb :artists
   end
@@ -42,8 +51,8 @@ get '/users/:username' do
     @total_events = user.total_events
     @events       = user.gigography(year)
 
-    @smallest_venues = user.smallest_venues(year)
-    @biggest_venues = user.biggest_venues(year)
+    #@smallest_venues = user.smallest_venues(year)
+    #@biggest_venues = user.biggest_venues(year)
 
     top_artists   = user.top_artists(year)
     @top_artists  = top_artists.map {|a| Artist.new(a['object'], a['times'])}
@@ -83,9 +92,8 @@ get '/artists/:artist_mbid' do
     terms = ([artist]+@top_artists.first(5)).map {|a| a.terms}.flatten.compact
     @top_terms = terms.inject(Hash.new(0)) { |total, e| total[e] += 1 ; total}.sort_by {|a| a[1]}.reverse
 
-
-    @smallest_venues = artist.smallest_venues(year)
-    @biggest_venues = artist.biggest_venues(year)
+    #@smallest_venues = artist.smallest_venues(year)
+    #@biggest_venues = artist.biggest_venues(year)
 
     @top_venues  = artist.top_venues(year)
     @top_festivals  = artist.top_festivals(year)

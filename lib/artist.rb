@@ -1,4 +1,5 @@
 require 'rexml/document'
+require 'uri'
 
 class Artist
   include ApiAccess
@@ -13,6 +14,15 @@ class Artist
   def initialize(songkick_artist, num_times=nil)
     @songkick_artist = songkick_artist
     @num_times = num_times
+  end
+
+  def self.find_by_name(name)
+    url    = "http://api.songkick.com/api/3.0/search/artists.json?query=#{URI.escape(name)}&apikey=#{key('songkick')}"
+    artists = cached_data_from(url)
+    puts artists['resultsPage']['totalEntries'].inspect
+    return nil if artists['resultsPage']['totalEntries'] == 0
+    artist = artists['resultsPage']['results']['artist'].first
+    new(artist)
   end
 
   def self.find_by_mbid(mbid)

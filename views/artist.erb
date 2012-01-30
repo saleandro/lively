@@ -15,7 +15,6 @@
   <div class="span6 stats">
     <span><%= pluralize(@events.size, 'concert') %><% if params['year'] %> this year<% end %></span>
     <% if params['year'] %><span class="percentage"><%= "%.2f" % ((@events.size.to_f/@total_events)*100.0) %>% of <%= @total_events %></span><% end %>
-    <%= erb :_venue_stats, :locals => {:smallest_venues => @smallest_venues, :biggest_venues => @biggest_venues} %>
   </div>
 </div>
 
