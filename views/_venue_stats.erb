@@ -1,5 +1,16 @@
-<% if smallest_venues.any? && smallest_venues.size > biggest_venues.size %>
-  <span class="venue-stats">mostly at pubs and basements</span>
-<% elsif biggest_venues.any? %>
-  <span class="venue-stats">mostly at arenas and stadiums</span>
-<% end %>
+<span class="venue-stats"></span>
+<script type="text/javascript">
+$(document).ready(function() {
+  var parts = $(location).attr('href').split('/');
+  var id = parts.pop();
+  var type = parts.pop();
+  $.get("/api/"+type+"/"+id+"/venues/stats.json", function(json) {
+    if (json['type'] == 'pub') {
+      $('.venue-stats').html('mostly at pubs and basements');
+    }
+    if (json['type'] == 'arena') {
+      $('.venue-stats').html('mostly at arenas and stadiums');
+    }
+  });
+});
+</script>

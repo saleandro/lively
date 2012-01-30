@@ -53,9 +53,6 @@ get '/users/:username' do
     @total_events = user.total_events
     @events       = user.gigography(year)
 
-    #@smallest_venues = user.smallest_venues(year)
-    #@biggest_venues = user.biggest_venues(year)
-
     top_artists   = user.top_artists(year)
     @top_artists  = top_artists.map {|a| Artist.new(a['object'], a['times'])}
 
@@ -93,9 +90,6 @@ get '/artists/:artist_mbid' do
 
     terms = ([artist]+@top_artists.first(5)).map {|a| a.terms}.flatten.compact
     @top_terms = terms.inject(Hash.new(0)) { |total, e| total[e] += 1 ; total}.sort_by {|a| a[1]}.reverse
-
-    #@smallest_venues = artist.smallest_venues(year)
-    #@biggest_venues = artist.biggest_venues(year)
 
     @top_venues  = artist.top_venues(year)
     @top_festivals  = artist.top_festivals(year)
@@ -137,6 +131,31 @@ get '/api/artists/:id/image.json' do
   songkick_artist = {'identifier' => ['mbid' => params[:id]]}
   artist = Artist.new(songkick_artist)
   {:url => artist.image}.to_json
+end
+
+get '/api/:type/:id/venues/stats.json' do
+  content_type :json
+
+  case params[:type]
+    when 'users'
+      resource = User.new(params[:id])
+    when 'artists'
+      songkick_artist = {'identifier' => ['mbid' => params[:id]]}
+      resource = Artist.new(songkick_artist)
+    else
+      return 404
+  end
+
+  year = params[:year].to_i > 0 ? params[:year] : nil
+  biggest_venues = resource.biggest_venues(year)
+  smallest_venues = resource.smallest_venues(year)
+  stats = {}
+  if smallest_venues.any? && smallest_venues.size > biggest_venues.size
+    stats[:type] = 'pub'
+  elsif biggest_venues.any?
+    stats[:type] = 'arena'
+  end
+  stats.to_json
 end
 
 get '/api/:type/:id/metro_areas.json' do
