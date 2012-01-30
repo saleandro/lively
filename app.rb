@@ -28,15 +28,15 @@ get '/users' do
 end
 
 get '/artists' do
-  if params[:artist_mbid]
-    url = '/artists/' + params[:artist_mbid]
-    url += '?year=' + params[:year] if params[:year].to_i > 0
+  if params['artist_mbid']
+    url = '/artists/' + params['artist_mbid']
+    url += '?year=' + params['year'] if params['year'].to_i > 0
     return redirect url
-  elsif params[:artist_name]
-    artist = Artist.find_by_name(params[:artist_name])
+  elsif params['artist_name']
+    artist = Artist.find_by_name(params['artist_name'])
     if artist.mbid
       url = '/artists/' + artist.mbid
-      url += '?year=' + params[:year] if params[:year].to_i > 0
+      url += '?year=' + params['year'] if params['year'].to_i > 0
       return redirect url
     else
       erb :artists
