@@ -1,6 +1,6 @@
 <h1>
   <img class="thumbnail" src="<%= @artist.image %>" alt="<%= @artist.name %>" text="<%= @artist.name %>">
-  <span><%= @artist.name %>’s lively <%= params['year'] ? params['year'] : 'history' %></span>
+  <span><%= @artist.name %>’s lively <%= params['year'].to_i > 0 ? params['year'] : 'history' %></span>
 </h1>
 
 <div class="row">
@@ -13,7 +13,7 @@
   </div>
 
   <div class="span6 stats">
-    <span><%= pluralize(@events.size, 'concert') %><% if params['year'] %> this year<% end %></span>
+    <span><%= pluralize(@events.size, 'concert') %><% if params['year'].to_i > 0 %> this year<% end %></span>
     <% if params['year'].to_i > 0 %>
       <span class="percentage"><%= "%.2f" % ((@events.size.to_f/@total_events)*100.0) %>% of <%= @total_events %></span>
     <% else %>
