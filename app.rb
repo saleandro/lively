@@ -15,6 +15,13 @@ require lib_folder + '/artist'
 
 include ApiAccess
 
+before do
+  if request.host =~ /heroku/
+    qs = request.query_string != '' ? "?#{request.query_string}" : ''
+    redirect('http://www.relively.com' + request.path_info + qs, 301)
+  end
+end
+
 get '/users' do
   if params['username']
     username = params.delete('username')
@@ -192,15 +199,6 @@ get '/api/:type/:id/artists.json' do
   year = params[:year].to_i > 0 ? params[:year] : nil
   artists = resource.top_artists(year)
   artists.to_json
-end
-
-get '/test' do
-  if request.host =~ /heroku/
-    qs = request.query_string != '' ? "?#{request.query_string}" : ''
-    redirect('http://www.relively.com' + request.path_info + qs, 301)
-  else
-    puts request.host
-  end
 end
 
 not_found do
