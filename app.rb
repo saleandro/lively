@@ -70,7 +70,7 @@ get '/users/:username' do
     @top_metro_areas = user.top_metro_areas(year)
     @latlngs         = user.latlngs(year)
 
-    @on_load_javascript = 'initialize();' 
+    @on_load_javascript = 'initialize();'
     erb :user
   rescue NotFound
     return 404
@@ -192,6 +192,15 @@ get '/api/:type/:id/artists.json' do
   year = params[:year].to_i > 0 ? params[:year] : nil
   artists = resource.top_artists(year)
   artists.to_json
+end
+
+'/test' do
+  if request.host =~ 'heroku'
+    qs = request.query_string != '' ? "?#{request.query_string}" : ''
+    redirect('http://www.relively.com' + request.path_info + qs, 301)
+  else
+    puts request.host
+  end
 end
 
 not_found do
