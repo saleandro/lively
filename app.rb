@@ -195,7 +195,7 @@ get '/api/:type/:id/artists.json' do
 end
 
 get '/test' do
-  if request.host =~ 'heroku'
+  if request.host =~ /heroku/
     qs = request.query_string != '' ? "?#{request.query_string}" : ''
     redirect('http://www.relively.com' + request.path_info + qs, 301)
   else
