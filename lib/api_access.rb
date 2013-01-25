@@ -14,7 +14,7 @@ module ApiAccess
     if expired_cache?(data)
       begin
         data = json_from(url)
-        DataStore.set(url, data.to_json)
+        #DataStore.set(url, data.to_json)
       rescue NotFound
         return nil
       end
