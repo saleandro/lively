@@ -8,7 +8,7 @@
     </div>
   </div>
   <div class="span10">
-    <h1 style="text-align:right"><%= params['username'] %>’s lively <%= params['year'].to_i > 0 ? params['year'] : 'history' %></h1>
+    <h2 style="text-align:right"><%= params['username'] %>’s lively <%= params['year'].to_i > 0 ? params['year'] : 'history' %></h2>
     <div class="stats">
       <span><%= pluralize(@events.size, 'concert') %><% if params['year'].to_i > 0 %> this year<% end %></span>
       <% if params['year'].to_i > 0 %>

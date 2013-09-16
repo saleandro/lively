@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 require 'rubygems'
 require 'pp'
 require 'sinatra'
@@ -20,6 +22,7 @@ before do
     qs = request.query_string != '' ? "?#{request.query_string}" : ''
     redirect('http://www.relively.com' + request.path_info + qs, 301)
   end
+  @title = "past concerts and festivals"
 end
 
 get '/users' do
@@ -78,6 +81,7 @@ get '/users/:username' do
     @latlngs         = user.latlngs(year)
 
     @on_load_javascript = 'initialize();'
+    @title = "#{params['username']}’s gigography"
     erb :user
   rescue NotFound
     return 404
@@ -104,6 +108,7 @@ get '/artists/:artist_mbid' do
     @latlngs     = artist.latlngs(year)
 
     @on_load_javascript = 'initialize();'
+    @title = "#{artist.name}’s gigography"
     erb :artist
   rescue NotFound
     return 404

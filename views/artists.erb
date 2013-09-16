@@ -7,16 +7,19 @@
 <% end %>
 
 <div class="row">
-  <div class="span4"><h1><a href="/artists">artist</a></h1></div>
+  <div class="span4"><h2><a href="/artists">artist</a></h2></div>
   <div class="span10">
   </div>
 </div>
 
 <div class="row" style="margin-top:40px">
   <div class="span10">
-  <form method="get" action="/artists">
+  <form class="form-inline"  method="get" action="/artists">
+     <fieldset>
     <input type="text" placeholder="artist" name="artist_name" value="<%= params[:artist_name] %>">
-    <input type="text" placeholder="year (optional)" name="year"><input type="submit" value="go!">
+    <input type="text" placeholder="year (optional)" name="year">
+    <input class="btn" type="submit" value="Go!">
+     </fieldset>
   </form>
   </div>
 </div>

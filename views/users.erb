@@ -1,17 +1,20 @@
 <div class="row">
-  <div class="span6"><h1><a href="/users">songkick user</a></h1></div>
+  <div class="span6"><h2><a href="/users">songkick user</a></h2></div>
 </div>
 
 <div class="row" style="margin-top:40px">
   <div class="span10">
-    <form method="get" action="/users">
+    <form class="form-inline" method="get" action="/users">
+       <fieldset>
       <input type="text" placeholder="username" name="username">
       <select name="p" style="width:100px">
         <option value=""></option>
         <option value="f">girl</option>
         <option value="m">boy</option>
        </select>
-      <input type="text" placeholder="year (optional)" name="year"><input type="submit" value="go!">
+      <input type="text" placeholder="year (optional)" name="year">
+      <input class="btn" type="submit" value="Go!">
+       </fieldset>
     </form>
   </div>
 </div>
