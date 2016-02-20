@@ -22,7 +22,7 @@
 </div>
 
 <div class="row">
-  <div class="span8 histogram">
+  <div class="span8">
     <ol class="top-terms">
     <% @top_terms_percentages.each_with_index do |term, index| %>
       <li class="term<%= term.last.to_s.gsub('.', '_')%>"><%= term.first %></li>
