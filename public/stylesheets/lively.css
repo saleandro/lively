@@ -154,3 +154,8 @@ footer a {
 .hero-unit {
   padding-top: 40px;
 }
+
+#key div {
+  padding-left: 10px;
+  font-weight: bold;
+}
