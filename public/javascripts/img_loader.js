@@ -5,7 +5,7 @@ $(document).ready(function() {
     }
   );
 
-  var artistImageLinks = $('.media-grid').find('a.artist-image');
+  var artistImageLinks = $('.artists').find('a.artist-image');
   for(var i=0; i< artistImageLinks.length; i++) {
     loadImage(artistImageLinks[i]);
   }
