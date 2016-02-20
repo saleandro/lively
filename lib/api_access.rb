@@ -59,9 +59,9 @@ module ApiAccess
 
   def read_from_curb(url)
     curb_connection.url = url
-    curb_connection.headers.update({"accept-encoding" => "gzip, compressed"})
+    # curb_connection.headers.update({"accept-encoding" => "gzip, compressed"})
     curb_connection.http_get
-    data = ActiveSupport::Gzip.decompress(curb_connection.body_str)
+    data = curb_connection.body_str # ActiveSupport::Gzip.decompress(curb_connection.body_str)
     process_response(url, curb_connection.response_code, data)
   rescue Zlib::GzipFile::Error => e
     $stderr.puts "#{e.message}: #{url}"
