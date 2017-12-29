@@ -3,9 +3,11 @@ require 'enumerator'
 module Evented
 
   def total_events
-    url = "#{api_endpoint}/gigography.json?apikey=#{key('songkick')}&page=1&per_page=1"
-    events = cached_data_from(url)
-    events['resultsPage']['totalEntries'].to_i
+    @total_events = begin
+      url = "#{api_endpoint}/gigography.json?apikey=#{key('songkick')}&page=1&per_page=1"
+      events = cached_data_from(url)
+      events['resultsPage']['totalEntries'].to_i
+    end
   end
 
   def top_artists(year=nil, count_festivals=true)
@@ -66,7 +68,8 @@ module Evented
     latlngs = events.map do |event|
       next unless event['location']['lat']
       [event['location']['lat'].to_f, event['location']['lng'].to_f]
-    end.compact
+    end
+    latlngs.compact
   end
 
   def smallest_venues(year=nil)
@@ -86,6 +89,9 @@ module Evented
   end
 
   def gigography(year=nil)
+    @events ||= {}
+    return @events[year] if @events[year]
+
     page          = 0
     per_page      = 100
     events        = []
@@ -99,8 +105,8 @@ module Evented
       events       += events_json['resultsPage']['results']['event']
     end
 
-    events = events.select {|e| Time.parse(e['start']['date']).year == year.to_i} if year
-    events
+    @events[year] = events.select {|e| Time.parse(e['start']['date']).year == year.to_i} if year
+    @events[year]
   end
 
   private
@@ -113,7 +119,8 @@ module Evented
 
       url = "http://api.songkick.com/api/3.0/venues/#{venue_id}.json?apikey=#{key('songkick')}"
       cached_data_from(url)['resultsPage']['results']['venue']
-    end.flatten.compact.uniq
+    end
+    venues.flatten.compact.uniq
   end
 
   def sort_and_format_response(things, type, year=nil)

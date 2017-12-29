@@ -1,9 +1,7 @@
-require 'rexml/document'
 require 'uri'
 
 class Artist
   include ApiAccess
-  include REXML
   include Evented
 
   attr_reader   :type
@@ -35,13 +33,13 @@ class Artist
   end
 
   def image
-    image_url = DataStore.get("artist_image_#{artist_id}")
+    image_url = data_store.get("artist_image_#{artist_id}")
     unless image_url
       id_param = mbid ? 'mbid='+mbid : 'artist='+URI.encode(name)
       json     = cached_data_from('http://ws.audioscrobbler.com/2.0/?method=artist.getInfo&api_key='+key('lastfm')+'&'+id_param+'&format=json')
       image_url = json && json['artist'] ? json['artist']['image'].select {|i| i['size'] == 'large'}.first['#text'] : nil
       if image_url
-        DataStore.set("artist_image_#{artist_id}", image_url)
+        data_store.set("artist_image_#{artist_id}", image_url)
       end
     end
     image_url
@@ -52,6 +50,10 @@ class Artist
   end
 
   private
+
+  def data_store
+    @data_store ||= DataStore.new
+  end
 
   def catalog_id
     mbid||name
