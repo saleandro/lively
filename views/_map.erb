@@ -1,6 +1,6 @@
 <% if latlngs && latlngs.any? %>
-  <div class="row col-sm-12">
-    <div id="map"></div>
+  <div class="row">
+    <div class="col-sm-12"><div id="map"></div></div>
   </div>
 
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= ApiAccess.key('google_maps') %>&callback=initialize" type="text/javascript"></script>
