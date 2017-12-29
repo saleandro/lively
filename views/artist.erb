@@ -1,19 +1,22 @@
 <div class="row">
-  <div class="col-sm-8">
-    <h2>
+  <div class="col-sm-4 text-left">
+    <% if !(@artist.image.nil? || @artist.image.empty?) %>
     <img class="thumbnail" src="<%= @artist.image %>" alt="<%= @artist.name %>" text="<%= @artist.name %>" style="display:inline-block">
-    <span><%= @artist.name %>’s lively <%= params['year'].to_i > 0 ? params['year'] : 'history' %></span>
-    </h2>
-  </div>
-
-  <div class="col-sm-6 stats">
-    <span><%= pluralize(@events.size, 'concert') %><% if params['year'].to_i > 0 %> this year<% end %></span>
-    <% if params['year'].to_i > 0 %>
-      <span class="percentage"><%= "%.2f" % ((@events.size.to_f/@total_events)*100.0) %>% of <%= @total_events %></span>
-    <% else %>
-      <span class="percentage">On tour since <%=(@events.first['start']['date']).split('-').first %></span>
     <% end %>
-    <%#= erb :_venue_stats %>
+  </div>
+  <div class="col-sm-8">
+    <h1 class="text-right">
+      <a href="/artits/<%= @artist.mbid %>"><%= @artist.name %></a>’s lively <%= params['year'].to_i > 0 ? params['year'] : 'history' %>
+    </h1>
+
+    <div class="stats">
+      <span><%= pluralize(@events.size, 'concert') %><% if params['year'].to_i > 0 %> this year<% end %></span>
+      <% if params['year'].to_i > 0 %>
+        <span class="percentage"><%= "%.2f" % ((@events.size.to_f/@total_events)*100.0) %>% of <%= @total_events %></span>
+      <% else %>
+        <span class="percentage">On tour since <%=(@events.first['start']['date']).split('-').first %></span>
+      <% end %>
+    </div>
   </div>
 </div>
 
