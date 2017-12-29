@@ -12,7 +12,7 @@ class DataStore
   def store
     @store ||= begin
         if ENV["DATABASE_URL"]
-          SequelStore.new
+          NullStore.new # SequelStore.new
         else
           RedisStore.new
         end
