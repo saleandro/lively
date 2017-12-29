@@ -50,5 +50,8 @@ DEPENDENCIES
   sequel
   sinatra
 
+RUBY VERSION
+   ruby 2.3.6p384
+
 BUNDLED WITH
-   1.11.2
+   1.16.1
