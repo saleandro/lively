@@ -1,13 +1,13 @@
 <div class="row">
-  <div class="col-sm-6"><h2><a href="/users">songkick user</a></h2></div>
+  <div class="col-sm-6"><h1><a href="/users">songkick user</a></h1></div>
 </div>
 
 <div class="row">
   <div class="col-sm-10">
     <form class="form-inline" method="get" action="/users">
        <fieldset>
-      <input type="text" placeholder="username" name="username" style="width:220px;" value="<%= params[:username] %>">
-      <input type="number" placeholder="year (optional)" name="year" style="width:120px;" value="<%= params[:year] %>" maxlength="4">
+      <input type="text" placeholder="username" name="username" style="width:220px;" value="<%= params[:username] %>" required>
+      <input type="text" placeholder="year (optional)" name="year" style="width:120px;" value="<%= params[:year] %>" maxlength="4" minlength="4">
       <input class="btn" type="submit" value="Go!">
        </fieldset>
     </form>

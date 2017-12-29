@@ -3,7 +3,7 @@ require 'enumerator'
 module Evented
 
   def total_events
-    @total_events = begin
+    @total_events ||= begin
       url = "#{api_endpoint}/gigography.json?apikey=#{key('songkick')}&page=1&per_page=1"
       events = cached_data_from(url)
       return nil unless events
@@ -97,13 +97,10 @@ module Evented
     page          = 0
     per_page      = 100
     events        = []
-    total_entries = 1
-    while events.size < total_entries
+    while events.size < total_events
       page         += 1
       url           = "#{api_endpoint}/gigography.json?apikey=#{key('songkick')}&page=#{page}&per_page=#{per_page}"
       events_json   = cached_data_from(url)
-
-      total_entries = events_json['resultsPage']['totalEntries'].to_i
       events       += events_json['resultsPage']['results']['event']
     end
 

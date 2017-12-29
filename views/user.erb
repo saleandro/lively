@@ -5,10 +5,12 @@
     <h1 class="text-right"><a href="/users/<%= params['username'] %>"><%= params['username'] %></a>’s lively <%= params['year'].to_i > 0 ? params['year'] : 'history' %></h1>
     <div class="stats">
       <span><%= pluralize(@events.size, 'concert') %><% if params['year'].to_i > 0 %> this year<% end %></span>
-      <% if params['year'].to_i > 0 %>
-        <span class="percentage"><%= "%.2f" % ((@events.size.to_f/@total_events)*100.0) %>% of <%= @total_events %></span>
-      <% else %>
-        <span class="percentage">On tour since <%=(@events.first['start']['date']).split('-').first %></span>
+      <% unless @events.empty? %>
+        <% if params['year'].to_i > 0 %>
+          <span class="percentage"><%= "%.2f" % ((@events.size.to_f/@total_events)*100.0) %>% of <%= @total_events %></span>
+        <% else %>
+          <span class="percentage">On tour since <%=(@events.first['start']['date']).split('-').first %></span>
+        <% end %>
       <% end %>
       <%#= erb :_venue_stats %>
     </div>
