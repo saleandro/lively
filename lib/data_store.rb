@@ -12,7 +12,6 @@ class DataStore
   def store
     @store ||= begin
         if ENV["DATABASE_URL"]
-          $stderr.puts "New sequel store"
           SequelStore.new
         else
           RedisStore.new
@@ -41,11 +40,11 @@ class DataStore
 
   class SequelStore
     def initialize
-      @sqldb ||= Sequel.connect(ENV["DATABASE_URL"])
+      $sqldb ||= Sequel.connect(ENV["DATABASE_URL"])
     end
 
     def get(key)
-      @sqldb[:cache].filter(:key => key).select(:value).single_value
+      $sqldb[:cache].filter(:key => key).select(:value).single_value
     rescue Sequel::DatabaseConnectionError => e
       $stderr.puts "Error getting data from Sequel: #{e}"
       nil
@@ -53,9 +52,9 @@ class DataStore
 
     def set(key, value)
       if get(key)
-        @sqldb[:cache].filter(:key => key).update(:value => value)
+        $sqldb[:cache].filter(:key => key).update(:value => value)
       else
-        @sqldb[:cache].insert(:key => key, :value => value)
+        $sqldb[:cache].insert(:key => key, :value => value)
       end
     rescue Sequel::DatabaseConnectionError => e
       $stderr.puts "Error storing data into Sequel: #{e}"
