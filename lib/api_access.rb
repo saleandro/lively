@@ -14,7 +14,7 @@ module ApiAccess
     if expired_cache?(data)
       begin
         data = json_from(url)
-        #DataStore.set(url, data.to_json)
+        #data_store.set(url, data.to_json)
       rescue NotFound
         return nil
       end
@@ -36,12 +36,16 @@ module ApiAccess
 
   private
 
+  def data_store
+    @data_store ||= DataStore.new
+  end
+
   def expired_cache?(data)
     data.nil?
   end
 
   def cached_data(url)
-    DataStore.get(url)
+    data_store.get(url)
   end
 
   def json_from(url)
@@ -53,7 +57,7 @@ module ApiAccess
   def read_from(url)
     start = Time.now
     res = read_from_curb(url)
-    puts "#{Time.now - start}s #{url}"
+    $stdout.puts "#{Time.now - start}s #{url}"
     res
   end
 
