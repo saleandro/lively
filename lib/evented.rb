@@ -90,7 +90,8 @@ module Evented
 
   def gigography(year=nil)
     @events ||= {}
-    return @events[year] if @events[year]
+    key = year||'all'
+    return @events[key] if @events[key]
 
     page          = 0
     per_page      = 100
@@ -105,8 +106,11 @@ module Evented
       events       += events_json['resultsPage']['results']['event']
     end
 
-    @events[year] = events.select {|e| Time.parse(e['start']['date']).year == year.to_i} if year
-    @events[year]
+    if year
+      @events[key] = events.select {|e| Time.parse(e['start']['date']).year == year.to_i}
+    else
+      @events[key] = events
+    end
   end
 
   private
