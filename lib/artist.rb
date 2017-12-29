@@ -51,10 +51,6 @@ class Artist
 
   private
 
-  def data_store
-    @data_store ||= DataStore.new
-  end
-
   def catalog_id
     mbid||name
   end

@@ -12,14 +12,15 @@ class DataStore
   def store
     @store ||= begin
         if ENV["DATABASE_URL"]
+          $stderr.puts "New sequel store"
           SequelStore.new
         else
           r = RedisStore.new
           r.get('test-connection')
           r
         end
-      rescue Redis::CannotConnectError
-        $stderr.puts "Using NullStore, error connecting to Redis"
+      rescue Redis::CannotConnectError, Sequel::DatabaseConnectionError => e
+        $stderr.puts "Using NullStore, error connecting #{e}"
         NullStore.new
       end
   end
@@ -41,7 +42,7 @@ class DataStore
 
   class SequelStore
     def initialize
-      @sqldb ||= Sequel.connect ENV["DATABASE_URL"]
+      @sqldb ||= Sequel.connect(ENV["DATABASE_URL"])
     end
 
     def get(key)

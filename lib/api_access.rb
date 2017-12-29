@@ -34,11 +34,11 @@ module ApiAccess
     end
   end
 
-  private
-
   def data_store
     @data_store ||= DataStore.new
   end
+
+  private
 
   def expired_cache?(data)
     data.nil?
