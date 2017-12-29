@@ -15,9 +15,7 @@ class DataStore
           $stderr.puts "New sequel store"
           SequelStore.new
         else
-          r = RedisStore.new
-          r.get('test-connection')
-          r
+          RedisStore.new
         end
       rescue Redis::CannotConnectError, Sequel::DatabaseConnectionError => e
         $stderr.puts "Using NullStore, error connecting #{e}"
@@ -29,6 +27,7 @@ class DataStore
     def initialize
       uri = URI.parse('redis://localhost:6379')
       @redisdb ||= Redis.new(:host => uri.host, :port => uri.port, :password => uri.password, :user => uri.user, :thread_safe => true)
+      get('test-connection')
     end
 
     def get(key)
@@ -47,6 +46,9 @@ class DataStore
 
     def get(key)
       @sqldb[:cache].filter(:key => key).select(:value).single_value
+    rescue Sequel::DatabaseConnectionError => e
+      $stderr.puts "Error getting data from Sequel: #{e}"
+      nil
     end
 
     def set(key, value)
@@ -55,6 +57,9 @@ class DataStore
       else
         @sqldb[:cache].insert(:key => key, :value => value)
       end
+    rescue Sequel::DatabaseConnectionError => e
+      $stderr.puts "Error storing data into Sequel: #{e}"
+      nil
     end
   end
 
