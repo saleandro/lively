@@ -34,36 +34,6 @@ class Artist
     @songkick_artist['displayName']
   end
 
-  def terms
-    return @terms if @terms
-    return [] unless echonest_artist_id_param
-
-    url = 'http://developer.echonest.com/api/v4/artist/terms?api_key='+key('echonest')+'&'+echonest_artist_id_param+'&format=json'
-    json = cached_data_from(url)
-    @terms = json['response']['terms'] ? json['response']['terms'].select {|a| a['weight'].to_f > 0.8 }.map {|a| a['name']} : []
-  end
-
-  def hotttness=(hotttness)
-    @hotttness = hotttness
-  end
-
-  def hotttness
-    return @hotttness if @hotttness
-    return 0 unless echonest_artist_id_param
-
-    url = 'http://developer.echonest.com/api/v4/artist/hotttnesss?api_key='+key('echonest')+'&'+echonest_artist_id_param+'&format=json'
-    json = cached_data_from(url)
-    @hotttness = json['response']['artist'] ? json['response']['artist']['hotttnesss'] : 0
-  end
-
-  def echonest_image
-    return @image if @image
-    return nil unless echonest_artist_id_param
-
-    json     = cached_data_from("http://developer.echonest.com/api/v4/artist/images?api_key=#{key('echonest')}&#{echonest_artist_id_param}&format=json&results=1&start=0")
-    @image = json && json['response'] ? json['response']['images'].first['url'] : ''
-  end
-
   def image
     image_url = DataStore.get("artist_image_#{artist_id}")
     unless image_url
@@ -104,23 +74,4 @@ class Artist
   def api_endpoint
     "http://api.songkick.com/api/3.0/artists/#{artist_id}"
   end
-
-  def echonest_id_by_name(name)
-    url = 'http://developer.echonest.com/api/v4/artist/search?api_key='+key('echonest')+'&format=json&name='+URI.encode(name)
-    json = cached_data_from(url)
-    json['response']['artists'].first['id'] if json['response']['artists'].any?
-  end
-
-  def echonest_artist_id_param
-    if mbid
-      id_param = 'id=musicbrainz:artist:'+mbid
-    else
-      artist_id = echonest_id_by_name(name)
-      return nil unless artist_id
-
-      id_param = 'id='+artist_id
-    end
-  end
-
 end
-

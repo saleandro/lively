@@ -23,11 +23,6 @@
 
 <div class="row">
   <div class="span8">
-    <ol class="top-terms">
-    <% @top_terms_percentages.each_with_index do |term, index| %>
-      <li class="term<%= term.last.to_s.gsub('.', '_')%>"><%= term.first %></li>
-    <% end %>
-    </ol>
   </div>
 </div>
 
@@ -38,4 +33,3 @@
 <%= erb :_top_locations, :locals => {:top_festivals => @top_festivals, :top_venues => @top_venues, :top_metro_areas => @top_metro_areas} %>
 
 <%= erb :_map, :locals => {:latlngs => @latlngs} %>
-
