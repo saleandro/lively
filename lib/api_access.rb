@@ -77,7 +77,6 @@ module ApiAccess
   end
 
   def read_from_em(url)
-    start  = Time.now
     status = response = nil
     EventMachine.run do
       http = EventMachine::HttpRequest.new(url).get :head => {"accept-encoding" => "gzip, compressed"}

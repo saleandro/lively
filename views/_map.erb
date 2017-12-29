@@ -2,7 +2,7 @@
   <div id="map"></div>
 </div>
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= ApiAccess.key('google-maps') %>&callback=initialize" type="text/javascript"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= ApiAccess.key('google_maps') %>&callback=initialize" type="text/javascript"></script>
 <script type="text/javascript">
   function initialize() {
     <% if latlngs && latlngs.any? %>
