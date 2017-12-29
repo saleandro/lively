@@ -6,6 +6,7 @@ module Evented
     @total_events = begin
       url = "#{api_endpoint}/gigography.json?apikey=#{key('songkick')}&page=1&per_page=1"
       events = cached_data_from(url)
+      return nil unless events
       events['resultsPage']['totalEntries'].to_i
     end
   end

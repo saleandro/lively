@@ -4,10 +4,11 @@
   <title>relively - <%= @title %></title>
   <meta name="description" content="Concert and festival going history for Songkick users, bands, and artists. Top cities, top venues, and top artists." />
   <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-  <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/stylesheets/lively.css" type="text/css" />
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
   <%= @javascript %>
 </head>
 <body>
@@ -20,11 +21,11 @@
     <%= yield %>
 
     <div class="row">
-      <div class="span12">
+      <div class="col-sm-12">
         <footer>
-          <div><a href="http://saleandro.com">saleandro</a></div><div>and</div>
-          <a href="http://www.songkick.com"><img src="/images/songkick.png" width="100"></a>
-          <a href="http://last.fm"><img src="/images/lastfm.jpg" width="100"></a>
+          <a href="http://www.songkick.com"><img src="/images/songkick.png" width="60"></a><br>
+          <a href="http://last.fm"><img src="/images/lastfm.jpg" width="40"></a><br>
+          & <a href="http://saleandro.com">saleandro</a>
         </footer>
       </div>
     </div>

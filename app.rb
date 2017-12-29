@@ -44,7 +44,7 @@ get '/artists' do
     return redirect url
   elsif params['artist_name']
     artist = Artist.find_by_name(params['artist_name'])
-    if artist.mbid
+    if artist && artist.mbid
       url = '/artists/' + artist.mbid
       url += '?year=' + params['year'] if params['year'].to_i > 0
       return redirect url
@@ -59,20 +59,24 @@ end
 get '/users/:username' do
   begin
     user = User.new(params['username'])
-    year = params[:year].to_i > 0 ? params[:year] : nil
-    @total_events = user.total_events
-    @events       = user.gigography(year)
+    if user.not_found?
+      erb :users
+    else
+      year = params[:year].to_i > 0 ? params[:year] : nil
+      @total_events = user.total_events
+      @events       = user.gigography(year)
 
-    top_artists   = user.top_artists(year)
-    @top_artists  = top_artists.map {|a| Artist.new(a['object'], a['times'])}
+      top_artists   = user.top_artists(year)
+      @top_artists  = top_artists.map {|a| Artist.new(a['object'], a['times'])}
 
-    @top_venues      = user.top_venues(year)
-    @top_festivals   = user.top_festivals(year)
-    @top_metro_areas = user.top_metro_areas(year)
-    @latlngs         = user.latlngs(year)
+      @top_venues      = user.top_venues(year)
+      @top_festivals   = user.top_festivals(year)
+      @top_metro_areas = user.top_metro_areas(year)
+      @latlngs         = user.latlngs(year)
 
-    @title = "#{params['username']}’s gigography"
-    erb :user
+      @title = "#{params['username']}’s gigography"
+      erb :user
+    end
   rescue NotFound
     return 404
   end

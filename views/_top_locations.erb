@@ -1,6 +1,6 @@
 <div class="row">
   <% if top_venues.any? %>
-    <div class="span4">
+    <div class="col-sm-4">
     <h5><div class="top-venue">Top venues</div></h5>
     <ol>
       <% top_venues.first(10).each do |response| %>
@@ -11,7 +11,7 @@
   <% end %>
 
   <% if top_metro_areas.any? %>
-    <div class="span4">
+    <div class="col-sm-4">
     <h5><div class="top-venue">Top locations</div></h5>
       <ol>
         <% top_metro_areas.first(10).each do |response| %>
@@ -22,7 +22,7 @@
   <% end %>
 
   <% if top_festivals.any? %>
-    <div class="span4">
+    <div class="col-sm-4">
     <h5><div class="top-venue">Top festivals</div></h5>
       <ol>
         <% top_festivals.first(10).each do |response| %>

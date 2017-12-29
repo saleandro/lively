@@ -1,17 +1,12 @@
 <div class="row">
-  <div class="span12">
+  <div class="col-sm-8">
     <h2>
     <img class="thumbnail" src="<%= @artist.image %>" alt="<%= @artist.name %>" text="<%= @artist.name %>" style="display:inline-block">
     <span><%= @artist.name %>’s lively <%= params['year'].to_i > 0 ? params['year'] : 'history' %></span>
     </h2>
   </div>
-</div>
 
-<div class="row">
-  <div class="span6">
-  </div>
-
-  <div class="span6 stats">
+  <div class="col-sm-6 stats">
     <span><%= pluralize(@events.size, 'concert') %><% if params['year'].to_i > 0 %> this year<% end %></span>
     <% if params['year'].to_i > 0 %>
       <span class="percentage"><%= "%.2f" % ((@events.size.to_f/@total_events)*100.0) %>% of <%= @total_events %></span>

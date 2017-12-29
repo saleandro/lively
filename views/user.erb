@@ -1,8 +1,8 @@
-<div class="row" style="margin-bottom:20px;margin-top:20px">
-  <div class="span4">
+<div class="row">
+  <div class="col-sm-4">
   </div>
-  <div class="span7">
-    <h2 style="text-align:right"><%= params['username'] %>’s lively <%= params['year'].to_i > 0 ? params['year'] : 'history' %></h2>
+  <div class="col-sm-8">
+    <h1 class="text-right"><a href="/users/<%= params['username'] %>"><%= params['username'] %></a>’s lively <%= params['year'].to_i > 0 ? params['year'] : 'history' %></h1>
     <div class="stats">
       <span><%= pluralize(@events.size, 'concert') %><% if params['year'].to_i > 0 %> this year<% end %></span>
       <% if params['year'].to_i > 0 %>
@@ -12,11 +12,6 @@
       <% end %>
       <%#= erb :_venue_stats %>
     </div>
-  </div>
-</div>
-
-<div class="row">
-  <div class="span8">
   </div>
 </div>
 
