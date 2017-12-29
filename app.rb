@@ -71,7 +71,6 @@ get '/users/:username' do
     @top_metro_areas = user.top_metro_areas(year)
     @latlngs         = user.latlngs(year)
 
-    @on_load_javascript = 'initialize();'
     @title = "#{params['username']}’s gigography"
     erb :user
   rescue NotFound
@@ -95,7 +94,6 @@ get '/artists/:artist_mbid' do
     @top_metro_areas  = artist.top_metro_areas(year)
     @latlngs     = artist.latlngs(year)
 
-    @on_load_javascript = 'initialize();'
     @title = "#{artist.name}’s gigography"
     erb :artist
   rescue NotFound
