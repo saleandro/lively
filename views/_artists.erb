@@ -1,15 +1,20 @@
-<div class="row-fluid artists">
-<% artists.first(24).each do |artist| %>
-  <div class="artist">
-    <% if artist.mbid %><a class="artist-image" href="/artists/<%= artist.mbid%>"><% else %><span class="artist-image"><% end %>
-      <img class="thumbnail" onhover="" <% if artist.mbid %>id="<%= artist.mbid %>"<% end %> src="" alt="<%= artist.name + ": #{pluralize(artist.num_times)}" %>" title="<%= artist.name + ": #{pluralize(artist.num_times)}" %>">
-    <% if artist.mbid %></a><% else %></span><% end %>
+<% if artists.any? %>
+  <h5 style="margin-top:40px"><div><%= title %></div></h5>
+
+  <div class="row-fluid artists">
+  <% artists.first(24).each do |artist| %>
+    <div class="artist">
+      <% if artist.mbid %><a class="artist-image" href="/artists/<%= artist.mbid%>"><% else %><span class="artist-image"><% end %>
+        <img class="thumbnail" onhover="" <% if artist.mbid %>id="<%= artist.mbid %>"<% end %> src="" alt="<%= artist.name + ": #{pluralize(artist.num_times)}" %>" title="<%= artist.name + ": #{pluralize(artist.num_times)}" %>">
+      <% if artist.mbid %></a><% else %></span><% end %>
+    </div>
+  <% end %>
   </div>
+
+  <div class="row-fluid">
+    <h5><div class="artist-name">&nbsp;</div></h5>
+  </div>
+
+  <script type="text/javascript" src="/javascripts/img_loader.js"></script>
+
 <% end %>
-</div>
-
-<div class="row-fluid">
-  <h5><div class="artist-name">&nbsp;</div></h5>
-</div>
-
-<script type="text/javascript" src="/javascripts/img_loader.js"></script>

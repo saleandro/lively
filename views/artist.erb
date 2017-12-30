@@ -26,5 +26,4 @@
 
 <%= erb :_map, :locals => {:latlngs => @latlngs} %>
 
-<h5 style="margin-top:40px"><div>Played with...</div></h5>
-<%= erb :_artists, :locals => {:artists => @top_artists} %>
+<%= erb :_artists, :locals => {:artists => @top_artists, :title => "Played with..."} %>

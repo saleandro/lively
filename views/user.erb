@@ -19,8 +19,7 @@
 
 <%= erb :_no_events if @events.empty? %>
 
-<h5 style="margin-top:40px"><div>Top artists</div></h5>
-<%= erb :_artists, :locals => {:artists => @top_artists} %>
+<%= erb :_artists, :locals => {:artists => @top_artists, :title => "Top artists"} %>
 
 <%= erb :_map, :locals => {:latlngs => @latlngs} %>
 
