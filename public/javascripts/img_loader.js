@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  $("a.artist-image").hover(
+  $("div.artist").hover(
     function () {
       $('div.artist-name').html($(this).find('img').attr('title'));
     }
