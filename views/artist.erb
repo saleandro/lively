@@ -22,8 +22,9 @@
 
 <%= erb :_no_events if @events.empty? %>
 
-<%= erb :_map, :locals => {:latlngs => @latlngs} %>
-
 <%= erb :_top_locations, :locals => {:top_festivals => @top_festivals, :top_venues => @top_venues, :top_metro_areas => @top_metro_areas} %>
 
+<%= erb :_map, :locals => {:latlngs => @latlngs} %>
+
+<h5 style="margin-top:40px"><div>Played with...</div></h5>
 <%= erb :_artists, :locals => {:artists => @top_artists} %>

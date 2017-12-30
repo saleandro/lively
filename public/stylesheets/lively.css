@@ -65,12 +65,13 @@ a:hover {
 
 .artists {
   margin-left: 0;
+  margin-top: 20px;
 }
 
 .artist {
   display: inline-block;
-  margin-bottom: 15px;
-  margin-right: 15px;
+  margin-bottom: 10px;
+  margin-right: 10px;
   vertical-align: top;
 }
 
@@ -83,10 +84,10 @@ a.artist-image, span.artist-image {
   overflow: hidden;
   width: 100px;
 
-  border-radius: 0px;
+  border-radius: 0;
   box-shadow: none;
-  margin: 0 0 0px 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
 }
 
 a.artist-image {
@@ -96,6 +97,10 @@ a.artist-image {
 a.artist-image:hover {
   text-decoration: none;
   border-color: #f86484;
+}
+
+.artist-image img {
+  padding: 0;
 }
 
 .artist-count {
@@ -115,6 +120,10 @@ a.artist-image:hover {
 
 .artist-name, .top-venue, .distance {
   color: #666666;
+}
+
+.artist-name {
+  font-size: 0.8em;
 }
 
 h3 {
