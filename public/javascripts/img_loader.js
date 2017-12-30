@@ -1,7 +1,7 @@
 $(document).ready(function() {
-  $(".artist-image img").hover(
+  $("a.artist-image").hover(
     function () {
-      $('div.artist-name').html($(this).attr('title'));
+      $('div.artist-name').html($(this).find('img').attr('title'));
     }
   );
 
