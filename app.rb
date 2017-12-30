@@ -26,8 +26,8 @@ before do
 end
 
 get '/users' do
-  if params['username']
-    username = params.delete('username')
+  username = (params.delete('username')||'').strip
+  if username != ''
     url = '/users/' + username
     qs = params.map {|k, v| "#{k}=#{v}"}
     url += "?#{qs.join('&')}" if qs

@@ -3,7 +3,7 @@ class User
   include Evented
 
   def initialize(username)
-    @username = username
+    @username = username.strip
   end
 
   def not_found?
