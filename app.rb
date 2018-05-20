@@ -72,7 +72,7 @@ get '/users/:username' do
       @top_venues      = user.top_venues(year)
       @top_festivals   = user.top_festivals(year)
       @top_metro_areas = user.top_metro_areas(year)
-      @latlngs         = user.latlngs(year)
+      # @latlngs         = user.latlngs(year) # remove google maps for now
 
       @title = "#{params['username']}’s gigography"
       erb :user
@@ -96,7 +96,7 @@ get '/artists/:artist_mbid' do
     @top_venues  = artist.top_venues(year)
     @top_festivals  = artist.top_festivals(year)
     @top_metro_areas  = artist.top_metro_areas(year)
-    @latlngs     = artist.latlngs(year)
+    # @latlngs     = artist.latlngs(year) # remove google maps for now
 
     @title = "#{artist.name}’s gigography"
     erb :artist
