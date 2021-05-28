@@ -18,10 +18,10 @@ require lib_folder + '/artist'
 include ApiAccess
 
 before do
-  if request.host =~ /heroku/
-    qs = request.query_string != '' ? "?#{request.query_string}" : ''
-    redirect('http://www.relively.com' + request.path_info + qs, 301)
-  end
+  # if request.host =~ /heroku/
+  #   qs = request.query_string != '' ? "?#{request.query_string}" : ''
+  #   redirect('http://www.relively.com' + request.path_info + qs, 301)
+  # end
   @title = "past concerts and festivals"
 end
 
