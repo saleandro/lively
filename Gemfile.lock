@@ -29,7 +29,7 @@ GEM
       ruby2_keywords (~> 0.0.1)
     pg (1.2.3)
     public_suffix (4.0.6)
-    rack (2.2.3)
+    rack (2.2.6.2)
     rack-protection (2.2.0)
       rack
     redis (4.2.5)
